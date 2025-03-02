@@ -24,4 +24,27 @@ int2 ClampPixelCoord(int2 pixelCoord, int2 textureSize)
     return pixelCoord;
 }
 
+inline int ClampPixelCoordX(int pixelCoordX, int textureSizeX)
+{
+    return (int) ((uint) pixelCoordX & ((uint) textureSizeX - 1u));
+}
+
+float2 ClampUv(float2 uv)
+{
+    float yWrapBot = -uv.y - 1;
+    float yWrapTop = 2 - uv.y;
+    float xWrapY = uv.x + 0.5;
+
+    float yWrapAnyNeeded = (uv.y < 0 || uv.y >= 1) ? 1.0 : 0.0;
+    float yWrapNotNeeded = 1 - yWrapAnyNeeded;
+    float yWrapBotNeeded = (uv.y < 0) ? 1.0 : 0.0;
+    float yWrapTopNeeded = (uv.y >= 1) ? 1.0 : 0.0;
+
+    uv.y = (yWrapNotNeeded * uv.y) + (yWrapBotNeeded * yWrapBot) + (yWrapTopNeeded * yWrapTop);
+    uv.x = (yWrapNotNeeded * uv.x) + (yWrapAnyNeeded * xWrapY);
+    uv.x = frac(uv.x + 1);
+
+    return uv;
+}
+
 #endif // CES_TEX_UTILITIES_DEFINED
