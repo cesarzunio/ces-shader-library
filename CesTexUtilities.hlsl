@@ -6,6 +6,13 @@ inline int PixelCoordToFlat(int2 pixelCoord, int textureSizeX)
     return pixelCoord.x + (pixelCoord.y * textureSizeX.x);
 }
 
+// assumes textureSizeX is a power of 2
+inline int ClampPixelCoordX(int pixelCoordX, int textureSizeX)
+{
+    return (int) ((uint) pixelCoordX & ((uint) textureSizeX - 1u));
+}
+
+// assumes textureSizeX is a power of 2
 int2 ClampPixelCoord(int2 pixelCoord, int2 textureSize)
 {
     int yWrapBot = -pixelCoord.y - 1;
@@ -19,14 +26,9 @@ int2 ClampPixelCoord(int2 pixelCoord, int2 textureSize)
 
     pixelCoord.y = (yWrapNotNeeded * pixelCoord.y) + (yWrapBotNeeded * yWrapBot) + (yWrapTopNeeded * yWrapTop);
     pixelCoord.x = (yWrapNotNeeded * pixelCoord.x) + (yWrapAnyNeeded * xWrapY);
-    pixelCoord.x = (int) ((uint) pixelCoord.x & ((uint) textureSize.x - 1u));
+    pixelCoord.x = ClampPixelCoordX(pixelCoord.x, textureSize.x);
 
     return pixelCoord;
-}
-
-inline int ClampPixelCoordX(int pixelCoordX, int textureSizeX)
-{
-    return (int) ((uint) pixelCoordX & ((uint) textureSizeX - 1u));
 }
 
 float2 ClampUv(float2 uv)

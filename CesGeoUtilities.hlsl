@@ -26,7 +26,7 @@ float2 UnitSphereToGeoCoord(float3 unitSphere)
 float2 UnitSphereToGeoCoordAtan(float3 unitSphere)
 {
     float lonRad = atan2(-unitSphere.x, unitSphere.z);
-    float radiusXZ = sqrt(unitSphere.x * unitSphere.x + unitSphere.z * unitSphere.z);
+    float radiusXZ = length(unitSphere.xz);
     float latRad = atan2(-unitSphere.y, radiusXZ);
 
     return float2(lonRad, latRad);
@@ -35,7 +35,7 @@ float2 UnitSphereToGeoCoordAtan(float3 unitSphere)
 float2 UnitSphereToGeoCoordAtanFast(float3 unitSphere)
 {
     float lonRad = CesFastAtan2(-unitSphere.x, unitSphere.z);
-    float radiusXZ = sqrt(unitSphere.x * unitSphere.x + unitSphere.z * unitSphere.z);
+    float radiusXZ = length(unitSphere.xz);
     float latRad = CesFastAtan2(-unitSphere.y, radiusXZ);
 
     return float2(lonRad, latRad);
